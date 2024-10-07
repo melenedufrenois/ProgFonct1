@@ -1,16 +1,19 @@
+body, html {
+  height: 100%;
+  margin: 0;
+}
+
 .App {
-  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  color: #c23094;
 }
 
 .App-logo {
   height: 40vmin;
   pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
 }
 
 .App-header {
@@ -35,4 +38,122 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+.form-container {
+  display: flex;
+  flex-direction: column;
+  max-width: 400px;
+  width: 100%;
+  padding: 20px;
+  background-color: #f9f9f9;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+}
+
+h2 {
+  text-align: center;
+  color: #333;
+}
+
+/* Style des champs de saisie */
+.form-group {
+  margin-bottom: 15px;
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  font-size: 0.9rem;
+  color: #555;
+  margin-bottom: 5px;
+}
+
+input {
+  max-width: 400px;
+  width: 100%;
+  padding: 10px;
+  font-size: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  transition: border 0.3s ease;
+}
+
+input:focus {
+  border-color: #c23094;
+  outline: none;
+}
+
+/* Message d'erreur */
+.error {
+  color: red;
+  font-size: 0.8rem;
+  margin-top: 5px;
+}
+
+.submit-button {
+  padding: 0.7rem 1.2rem;
+  background-color: #c65ca4;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  border-radius: 10px;
+  margin-top: 10px;
+}
+
+/* Pour rendre le formulaire responsive */
+@media (max-width: 500px) {
+  .form-container {
+    max-width: 90%;
+    padding: 15px;
+  }
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+/* Styles pour le wrapper du mot de passe */
+.password-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+input[type="password"],
+input[type="text"] {
+  width: 100%;
+  padding-right: 60px; /* Pour laisser de l'espace pour le bouton */
+}
+
+/* Style spécifique pour le bouton de visibilité */
+.toggle-password-btn {
+  position: absolute;
+  right: 10px;
+  background: none;
+  border: none;
+  color: #000000; /* Couleur par défaut */
+  cursor: pointer;
+  font-size: 0.9rem;
+  outline: none; /* Supprime le contour par défaut lors du focus */
+}
+
+.toggle-password-btn:hover {
+  color: #3820bf;
+}
+
+.submit-button {
+  padding: 12px;
+  background-color: #c1559f;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  margin-top: 20px;
+  transition: background-color 0.3s ease;
+}
+
+.submit-button:hover {
+  background-color: #c23094;
 }
