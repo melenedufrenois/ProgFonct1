@@ -1,13 +1,15 @@
 // App.js
 import React from 'react';
-import Form from './components/Form';
+import PokemonList from './components/PokemonList';
 import './App.css';
 
 function App() {
   return (
     <div className="App">
-      <h1>Création de compte</h1>
-      <Form />
+      <header className="App-header">
+        <h1>Liste des Pokémon</h1>
+      </header>
+      <PokemonList />
     </div>
   );
 }
