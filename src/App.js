@@ -6,9 +6,6 @@ import './App.css';
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <h1>Liste des Pokémon</h1>
-      </header>
       <PokemonList />
     </div>
   );

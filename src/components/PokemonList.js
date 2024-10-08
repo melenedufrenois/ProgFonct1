@@ -1,68 +1,77 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
 const PokemonList = () => {
-  const [pokemonList, setPokemonList] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [offset, setOffset] = useState(0); // Offset pour savoir où commencer la requête
-  const [previousAvailable, setPreviousAvailable] = useState(false); // Pour gérer le bouton précédent
-  const [nextAvailable, setNextAvailable] = useState(true); // Pour gérer le bouton suivant
-  const limit = 20;
+  const [pokemon, setPokemon] = useState([]);
+  const [sortOrder, setSortOrder] = useState('asc'); // 'asc' or 'desc'
+  const [searchTerm, setSearchTerm] = useState('');
 
-  // Fonction pour charger les Pokémon en fonction de l'offset
-  const fetchPokemon = (offset) => {
-    setLoading(true);
-    fetch(`https://pokeapi.co/api/v2/pokemon?limit=${limit}&offset=${offset}`)
-      .then((response) => response.json())
-      .then((data) => {
-        setPokemonList(data.results);
-        setPreviousAvailable(offset > 0); // Si offset > 0, activer "Précédent"
-        setNextAvailable(data.next !== null); // S'il y a des Pokémon après, activer "Suivant"
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error('Erreur lors du fetch des Pokémon :', error);
-        setLoading(false);
-      });
-  };
-
-  // Charger les Pokémon lors du premier rendu ou quand offset change
   useEffect(() => {
-    fetchPokemon(offset);
-  }, [offset]);
+    const fetchPokemon = async () => {
+      try {
+        const response = await fetch('https://pokeapi.co/api/v2/pokemon?limit=1000');
+        const data = await response.json();
+        
+        // Récupérer les détails de chaque Pokémon
+        const pokemons = await Promise.all(data.results.map(async (p, index) => {
+          const detailsResponse = await fetch(p.url);
+          const details = await detailsResponse.json();
+          return {
+            id: details.id,
+            name: p.name,
+            image: details.sprites.front_default, // URL de l'image
+          };
+        }));
 
-  // Fonction pour aller à la page suivante
-  const handleNext = () => {
-    setOffset(offset + limit);
-  };
+        setPokemon(pokemons);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
 
-  // Fonction pour revenir à la page précédente
-  const handlePrevious = () => {
-    setOffset(Math.max(0, offset - limit));
-  };
+    fetchPokemon();
+  }, []);
 
-  if (loading) {
-    return <p>Chargement des Pokémon...</p>;
-  }
+  // Gérer le tri
+  const sortedPokemon = [...pokemon].sort((a, b) => {
+    if (sortOrder === 'asc') {
+      return a.name.localeCompare(b.name);
+    } else {
+      return b.name.localeCompare(a.name);
+    }
+  });
+
+  // Filtrer par nom
+  const filteredPokemon = sortedPokemon.filter(p =>
+    p.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <div>
+      <h1>Pokémon List</h1>
+
+      {/* Champ de recherche */}
+      <input
+        type="text"
+        placeholder="Search by name"
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+      />
+
+      {/* Boutons de tri */}
+      <div>
+        <button onClick={() => setSortOrder('asc')}>Sort Ascending</button>
+        <button onClick={() => setSortOrder('desc')}>Sort Descending</button>
+      </div>
+
+      {/* Afficher les Pokémon */}
       <ul>
-        {pokemonList.map((pokemon, index) => (
-          <li key={index}>{pokemon.name}</li>
+        {filteredPokemon.map((p) => (
+          <li key={p.id}>
+            <img src={p.image} alt={p.name} style={{ width: '50px', height: '50px', marginRight: '10px' }} />
+            {p.id}: {p.name}
+          </li>
         ))}
       </ul>
-      
-      <div className="pagination-buttons">
-        {/* Bouton Précédent */}
-        <button onClick={handlePrevious} disabled={!previousAvailable}>
-          Précédents
-        </button>
-
-        {/* Bouton Suivant */}
-        <button onClick={handleNext} disabled={!nextAvailable}>
-          Suivants
-        </button>
-      </div>
     </div>
   );
 };
