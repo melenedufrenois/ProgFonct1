@@ -1,4 +1,3 @@
-// App.js
 import React, { useState } from 'react';
 import PokemonList from './components/PokemonList';
 import Alphabets from './components/Alphabets';
